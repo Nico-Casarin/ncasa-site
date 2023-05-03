@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Series on Nicola&#39;s site</title>
-    <link>https://ncasa.it/series/</link>
+    <link>https://github.com/Nico-Casarin/ncasa-site/tree/master/public/series/</link>
     <description>Recent content in Series on Nicola&#39;s site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© 2023 Nicola Casarin</copyright><atom:link href="https://ncasa.it/series/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© 2023 Nicola Casarin</copyright><atom:link href="https://github.com/Nico-Casarin/ncasa-site/tree/master/public/series/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

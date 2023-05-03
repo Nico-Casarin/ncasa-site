@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ncasa.it/categories/</loc>
+    <loc>https://github.com/Nico-Casarin/ncasa-site/tree/master/public/categories/</loc>
   </url><url>
-    <loc>https://ncasa.it/</loc>
+    <loc>https://github.com/Nico-Casarin/ncasa-site/tree/master/public/</loc>
   </url><url>
-    <loc>https://ncasa.it/series/</loc>
+    <loc>https://github.com/Nico-Casarin/ncasa-site/tree/master/public/series/</loc>
   </url><url>
-    <loc>https://ncasa.it/tags/</loc>
+    <loc>https://github.com/Nico-Casarin/ncasa-site/tree/master/public/tags/</loc>
   </url>
 </urlset>

@@ -15,7 +15,7 @@ languages:
     languageName: EN # will be displayed in the navbar.
     weight: 1
     author:
-      status: Hello there
+      status: Work in progress 🚧
 
 # author specifies your name, a slogon and your brief self-introduction.
 author:
@@ -26,7 +26,7 @@ author:
 
 params:
   # greet specifies greeting words.
-  greet: Hello :)
+  greet: Hello there
   # subtitle speficies a subtitle displayed right after the site title.
   subtitle:
   # switch specifies two emojis used as the button toggling color themes.

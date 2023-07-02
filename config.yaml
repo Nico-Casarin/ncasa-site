@@ -23,6 +23,7 @@ author:
   status: Currently living in Europe 🌍
   description: |
     This is my site :)
+  wai: ciao
 
 params:
   # greet specifies greeting words.

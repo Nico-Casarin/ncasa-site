@@ -19,6 +19,8 @@
     <link rel="shortcut icon" href="https://www.ncasa.it/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/minima.css">
     <script defer="defer" type="text/javascript" src="css/minima.js"></script>
+    <script src="node_modules/d3/dist/d3.min.js"></script>
+
     <script>const default_theme_config = "sand", default_light_theme = default_theme_config === "system" ? "light" : default_theme_config; let default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : default_light_theme; try { const e = localStorage.getItem("theme"); e && (default_theme = e === default_light_theme ? e : default_light_theme), localStorage.setItem("theme", default_theme), window.minima_theme = default_theme, document.querySelector("html").classList.add(default_theme) } catch (e) { console.error(e) }</script>
 </head>
 
@@ -61,6 +63,12 @@ whitespace-nowrap overflow-x-auto overflow-y-hidden"></ul>
                     website, or my <a href="https://ncasa.it/cv.html">CV!</a></p>
             </div>
         </div>
+
+        
+<svg id="myPlot" style="width:500px;height:500px"></svg>
+
+<script src="src/acquisitions.js"></script>
+
         <div></div>
     </main>
     <footer class="mt-8 mb-8">

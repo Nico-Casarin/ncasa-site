@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en" class="sand">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Hugo 0.111.3">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:title" content="Nicola's site">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.ncasa.it/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Nicola's site">
+    <meta name="twitter:description" content="">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
+    <title>Political Factions</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/minima.css">
+    <script defer="defer" type="text/javascript" src="../css/minima.js"></script>
+    <script src="../node_modules/d3/dist/d3.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>const default_theme_config = "sand", default_light_theme = default_theme_config === "system" ? "light" : default_theme_config; let default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : default_light_theme; try { const e = localStorage.getItem("theme"); e && (default_theme = e === default_light_theme ? e : default_light_theme), localStorage.setItem("theme", default_theme), window.minima_theme = default_theme, document.querySelector("html").classList.add(default_theme) } catch (e) { console.error(e) }</script>
+</head>
+
+<body>
+    <header class="mt-3 mb-6">
+        <div class="container mx-auto">
+            <nav class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div id="theme-switch" class="text-3xl cursor-pointer">🌝</div>
+                </div>
+                <div>
+                    <div class="text-3xl">
+                        <h2 class="font-bold"><a href="../index.html">Index</a></h2>
+                    </div>
+                </div>
+        </div>
+        <div>
+            <div< /div>
+        </div>
+        <ul class="flex items-center text-base font-bold whitespace-nowrap overflow-x-auto overflow-y-hidden"></ul>
+        <ul class="flex item-center text-sm font-bold"></ul>
+        </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto">
+        <h2 class="mt-8 text-3xl font-bold">Political Factions</h2>
+        <h2 class="mt-1 text-2xl">Brief network analysis of italian parliament during the Conte I and Conte II governemnts</h2>
+
+
+        <h2 class="mt-4 mb-2 text-2xl font-bold">Introduction</h2>
+        <p>In this short analysis, we use the open data from the Chamber of the
+            Deputies of the Italian Parliament to investigate the legislative
+            co-sponsorship of the members of the Chamber of the Deputies. The
+            analysis would cover the legislative process that ensued under Conte I
+            and Conte II cabinets within the legislature XVIII of Italy.</p>
+        <p>The analysis aims to understand the presence of political factions
+            underlying the legislative process in the Lower chamber of the Italian
+            Parliament by employing social network analysis techniques. Moreover, we
+            will analyse the cooperative behaviour of the Parliament parties
+            computing the <em>intra-opposition party bill differentiation</em>, as
+            shown by De Giorgi &amp; Dias <span class="citation">(2018)</span>.</p>
+        <p>Lastly, this project also strives to create a fully reproducible
+            workflow documented, commented and hosted in a public Github
+            repository.</p>
+
+        <h2 class="mt-4 mb-2 text-2xl font-bold">Methods</h2>
+
+        <p>The analysis is based on the research produced by De Giorgi and Dias;
+            the study analysed the network created by the co-sponsorship of
+            legislative acts during X and Y cabinets, in office, respectively, from
+            1900 to 1910 and 2016 to 2000.</p>
+        <p>The study does not provide the code used to produce the analysis nor
+            define the software used. For these reasons, the analysis has been
+            reproduced <em>ex nihilo</em> using R statistical computing language and
+            its packages, combined with the provided documentation.</p>
+        <p>The data has been collected using <code>dati.camera.it</code> relying
+            on a Virtuoso Endpoint via SPARQL language. The queries were prompted
+            through <code>SPARQL</code> packages. The Social Network Analysis was
+            held using <code>igraph</code> package. Data processing and preparation
+            was carried out with a selection of packages from the Tidyverse
+            collections. As a general rule, the code was written using the Tidyverse
+            verbs and syntax.</p>
+
+        <h2 class="mt-4 mb-2 text-2xl font-bold">Technical overview</h2>
+
+
+        <h2 class="mt-4 mb-2 text-0xl font-bold">Package loading</h2>
+
+        <pre class="r"><code>library(here)
+library(SPARQL)
+library(tidyverse)
+library(vroom)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(igraph)</code></pre>
+
+
+        <h2 class="mt-4 mb-2 text-0xl font-bold">Data collection</h2>
+
+        <p>The data retrieval consist of two main steps: firstly, we must
+            declare the endpoint to scrape:</p>
+        <pre class="r"><code>endpoint &lt;- &quot;http://dati.camera.it/sparql&quot;</code></pre>
+        <p>Since the SNA needs a list of vertices and a list of edges, we
+            scraped the information of the deputies who took office during the
+            selected cabinets and all the bills proposed. SPARQL queries use
+            semantic triples, which are built as a set of three entities
+            <code>subject-predicate-object</code>. To makes things more manageable,
+            we firstly declare a query to get the deputies information. To restrict
+            the result only to the 18th legislature, we used the triple
+            <code>?atto ocd:rif_leg &lt;http://dati.camera.it/ocd/legislatura.rdf/repubblica_18&gt;</code>.
+        </p>
+        <pre class="r"><code>bio &lt;- &quot;
+SELECT DISTINCT (CONCAT(?cognome,\&quot; \&quot;,?nome) AS ?name) , ?partito, ?s_office, ?e_office
+WHERE { ?persona a ocd:deputato;
+        foaf:firstName ?nome;
+        foaf:surname ?cognome .
+          ?persona ocd:rif_mandatoCamera ?mandato .
+       
+        #adesione a partito
+        ?mandato ocd:rif_deputato ?deputato .
+        ?deputato ocd:aderisce ?l .
+        ?l rdfs:label ?partito .
+    OPTIONAL{?l ocd:startDate ?s_office.}
+    OPTIONAL{?l ocd:endDate ?e_office.}
+       
+        #restict to 18esima legislatura
+        ?mandato ocd:rif_leg &lt;http://dati.camera.it/ocd/legislatura.rdf/repubblica_18&gt; .}
+ORDER BY ?name&quot;</code></pre>
+        <p>The query retrieves the deputy’s name, the party, and the office’s
+            dates. The dates are pivotal since a deputy could change party during
+            the mandate; these changes must be considered when building the social
+            network edges.</p>
+        <p>Then we could query the database:</p>
+        <pre class="r"><code>SPARQL(endpoint, bio)</code></pre>
+        <p>Subsequently, we retrieved the bills taking the number of the bill,
+            the date of the first proposal, the first signatory and the joint
+            signatories. The construction of this query encountered a significant
+            problem: the endpoint could not provide more than <span class="math inline">\(10 000\)</span>
+            results at once. So, we had to use
+            a <code>subquery-offset</code> method to bypass this limitation. To
+            restrict the results only to the first Conte’s cabinet, we used the
+            triple
+            <code>?atto ocd:rif_governo &lt;http://dati.camera.it/ocd/governo.rdf/g142&gt;</code>
+            as filter.
+        </p>
+        <pre class="r"><code>query_main &lt;- &quot;
+SELECT DISTINCT ?num ?date(CONCAT(?primo_cognome, \&quot; \&quot;,?primo_nome) AS ?signatory) 
+(CONCAT(?altro_cognome,\&quot; \&quot;,?altro_nome) AS ?joint_signatory)
+WHERE {
+ {
+  SELECT ?num ?date ?primo_nome ?primo_cognome ?altro_nome ?altro_cognome
+  WHERE {
+  ?atto a ocd:atto;
+          dc:identifier ?num;
+          dc:date ?date;
+          ocd:rif_leg &lt;http://dati.camera.it/ocd/legislatura.rdf/repubblica_18&gt; ;
+          ocd:rif_governo &lt;http://dati.camera.it/ocd/governo.rdf/g142&gt; .
+  
+  ?atto ocd:primo_firmatario ?primo .
+  ?primo  a ocd:deputato;
+            foaf:firstName ?primo_nome;
+            foaf:surname ?primo_cognome .
+    
+  ?atto ocd:altro_firmatario ?altro .
+  ?altro  a ocd:deputato;
+            foaf:firstName ?altro_nome;
+            foaf:surname ?altro_cognome .
+    }
+    GROUP BY ?atto
+    ORDER BY ?num ?primo_cognome ?altro_cognome
+}
+  }
+
+LIMIT 10000
+OFFSET&quot;</code></pre>
+        <p>Then, we defined the vector with offset limits:</p>
+        <pre class="r"><code>query_offset &lt;- c(&quot;0&quot;, &quot;5000&quot;, &quot;10000&quot;, &quot;15000&quot;,
+                  &quot;20000&quot;, &quot;25000&quot;, &quot;30000&quot;, &quot;35000&quot;)</code></pre>
+        <p>Lastly, we defined a for loop to make consecutive calls to the
+            database, changing offset limit for each call. This method permits
+            retrieval of more than <span class="math inline">\(10 000\)</span>
+            observations:</p>
+        <pre class="r"><code>for (i in 1:length(query_offset)) {
+  law &lt;- str_c(query_main,
+               query_offset[i],
+               sep = &quot; &quot;)
+  result_law &lt;- SPARQL(endpoint, law)
+  df_law &lt;- rbind(df_law, result_law$results)
+  Sys.sleep(2)
+}</code></pre>
+        <p>Since scraping large chunks of data could be burdensome for the host,
+            we set the offset to half of the endopoint’s limit ( 5000 observations
+            each), and, after every call, the loop sleeps for 2 seconds.</p>
+        <p>To retrieve the bills for the second Conte’s cabinet, we used the
+            same query structure, changing the “filter” triple to
+            <code>?atto ocd:rif_governo &lt;http://dati.camera.it/ocd/governo.rdf/g162</code>
+            [from <code>g142</code> to <code>g162</code>].
+        </p>
+        <p>Each result was exported into a CSV file after the retrieval<a href="#fn1" class="footnote-ref"
+                id="fnref1"><sup>1</sup></a>:</p>
+        <pre class="r"><code>write.csv(result1, here::here(&quot;data/deputies.csv&quot;))
+write.csv(result2, here::here(&quot;data/conte_i.csv&quot;))
+write.csv(result3, here::here(&quot;data/conte_ii.csv&quot;))</code></pre>
+
+
+        <div id="data-preparation" class="section level2">
+            <h2 class="mt-4 mb-2 text-0xl font-bold">Data preparation</h2>
+
+            <p>Since the resulting queries are not ready-made for the subsequent
+                analysis, we must prepare the data. For this purpose, we could define
+                functions for the needed purposes.</p>
+            <div id="deputies-preparation" class="section level3">
+                <h3>Deputies preparation</h3>
+                <p>We define the function for preparing the deputies:</p>
+                <pre class="r"><code>prep_deputies &lt;- function(deputies, end_date = &quot;2021-12-02&quot;) {
+
+deputies &lt;- deputies %&gt;%
+
+# removing office term included in the party name var party is provide as
+# &quot;PartyX (1900-00-01-[...])&quot; we need to remove what&#39;s after the first &quot;(&quot;
+separate(col = partito,
+         into = c(&quot;party&quot;, &quot;trash&quot;),
+         sep = &quot;\\(&quot;) %&gt;%
+mutate(
+  # arty column has space after the party name, then we must trim it!
+  party = str_trim(party),
+
+  # parsing offices data into a single interval format
+  date = interval(start = ymd(s_office),
+                  end = ymd(ifelse(test = is.na(deputies$e_office),
+                                   #since the 18th leg is still in office
+                                   #some MPs does not have ending date
+                                   yes = 20220228,
+                                   no = deputies$e_office)))) %&gt;%
+
+# dropping working variables no more useful
+select(!c(trash, s_office, e_office)) %&gt;%
+
+# drop deputies which have taken office *AFTER* Conte_ii cabinet
+filter(int_start(date) &lt; lubridate::ymd(end_date))
+
+#reuturn value
+return(deputies)
+}</code></pre>
+                <p>The function’s primary purpose is to deal with the query’s
+                    problematic results. The query returned four raw columns:</p>
+                <ul>
+                    <li>name of the deputy</li>
+                    <li>party of the deputy</li>
+                    <li>office start date</li>
+                    <li>office end date</li>
+                </ul>
+                <p>The major problem is the party column because it includes the party
+                    name and the terms of the mandate, written between round brackets. With
+                    <code>separate()</code>, we can split the party name from the terms,
+                    which are unused since we have it already. Then, we parse the start and
+                    end dates into an interval object.
+                </p>
+            </div>
+            <div id="contributions-preparation" class="section level3">
+
+                <h2 class="mt-4 mb-2 text-0xl font-bold">Contributions preparation</h2>
+                <pre class="r"><code>prep_cabinet &lt;- function(cabinet, cabinet_int, deputies) {
+`%!in%` &lt;- Negate(`%in%`) # &quot;not in&quot; function declaration
+
+#define cabinet name
+name &lt;- as.character(substitute(cabinet))  
+
+
+# Due to the construction of dati.camera.it database it&#39;s easier preparing
+#data within R environment:
+cabinet &lt;- cabinet %&gt;%
+ 
+ # removing duplicate rows
+ distinct(.) %&gt;%
+ 
+ # Parsing dates
+ mutate(date = ymd(date))
+
+# Extracting deputies and contributors
+cabinet_deputies &lt;- deputies %&gt;%
+ filter(int_start(date) &lt; int_end(cabinet_int)) %&gt;%
+ filter(!(int_end(date) &lt; int_start(cabinet_int)))
+
+# Since some MPs, may have changed party or decayed in between
+# they must be coded as SWITCHER/DECAYED
+is_duplicate &lt;- cabinet_deputies %&gt;%
+ 
+ # group by MPs names
+ group_by(name) %&gt;%
+ 
+ # n as how many time a unique name appears
+ summarise(n = n()) %&gt;%
+ 
+ # filter only the names who appear more than one time
+ filter(n &gt; 1) %&gt;%
+ 
+ # coding party as &quot;SWITCHER/DECAYED&quot;
+ add_column(party = &quot;SWITCHER/DECAYED&quot;) %&gt;%
+ 
+ #selecting only name an party to match the structure of cabinet_deputies
+ select(name, party)
+
+
+cabinet_deputies &lt;- cabinet_deputies %&gt;%
+ 
+ # remove switcher from cabinet_deputies with an anti joint fun
+ anti_join(is_duplicate, by = &quot;name&quot;) %&gt;%
+ 
+ #drop the date column, no more useful
+ select(!(date)) %&gt;%
+ 
+ #bind the Switcher to cabinet_deputies
+ bind_rows(., is_duplicate)
+
+#remove eventual orphan nodes
+cabinet_deputies &lt;-  cabinet_deputies %&gt;% 
+  filter(!(name %!in% c(cabinet$signatory,cabinet$joint_signatory)))
+
+# since there is MPs no included in the nodes df we must debug it!
+debug &lt;- cabinet[which(!(cabinet$joint_signatory %in% cabinet_deputies$name)), ]
+debug &lt;- unique(debug$joint_signatory)
+cabinet_deputies &lt;- rbind(cabinet_deputies,
+                         deputies[deputies$name %in% debug, 1:2])
+
+#assign the contributions DFs
+assign(name, 
+      cabinet,
+      envir = parent.frame())
+
+#assign the deputies DFs
+assign(stringr::str_c(name, &quot;_deputies&quot;),
+      cabinet_deputies,
+      envir = parent.frame())
+}</code></pre>
+                <p>The function consists of two primary purposes: first, removing the
+                    duplicates observation on the contributions dataframe. Furthermore, it
+                    deals with a significant issue: Italian members of Parliament can change
+                    the party during their mandate. This, cause the presence of duplicated
+                    names (vertices in the SNA) which must be removed.</p>
+                <p>The issue has been addressed by filtering for the deputies whose
+                    office mandate started <em>before</em> the cabinet end date and dropping
+                    the deputies whose office mandate started <em>after</em> the cabinet end
+                    date. Then, the deputies who appear more than once are saved in a
+                    temporary object, coding the <code>party</code> variables as
+                    “SWITCHER/DECAYED”. Lastly, the duplicates deputies are removed from the
+                    <code>cabinet_deputies</code> dataframe using an
+                    <code>anti_join()</code>, and then they are appended again to the
+                    dataframe. This method permits to have solely unique observations in the
+                    <code>cabinet_deputies</code> dataframe. Hence, the observations that
+                    appeared more than once are now unique, with the party coded as
+                    “SWITCHER/DECAYED”
+                </p>
+                <p>To remove eventual orphan nodes, the function removes the
+                    observations from <code>cabinet_deputies</code> dataframe, whose
+                    <code>name</code> is not present in the contributions dataframe,
+                    <code>cabinet</code>. In order to doing so, we used a user-defined
+                    operator: <code>%!in%</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.
+                    The operator
+                    returns the values of <span class="math inline">\(x\)</span> that do not match in <span
+                        class="math inline">\(y\)</span>. Applied to our case using a negate
+                    filter, it filters out all the deputies who are not present in the
+                    contributors’ dataframe<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.
+                </p>
+                <p>The function addresses another issue, also; some bills have
+                    latecomers associated as joint signatories since the lengthy legislative
+                    procedure. Possibly, these latecomers have not taken office under the
+                    cabinet in analysis and must be removed. The solution is implemented in
+                    a slightly convoluted manner which must be addressed in future
+                    releases.</p>
+                <p>At its last, the function returns the resulting dataframes to the
+                    parent environment using the <code>assign()</code> verb The name of the
+                    returned objects is built upon the dataframe given as the
+                    <code>cabinet</code> argument to the function.
+                </p>
+                <p>Defined all the functions, we can now use them finishing the data
+                    pre-processing:</p>
+                <pre class="r"><code># Deputies function
+deputies &lt;- prep_deputies(deputies)
+
+# Conte_i contributions and dates
+conte_i_date &lt;- interval(ydm(&quot;2018-31-05&quot;), ydm(&quot;2019-04-09&quot;))
+
+prep_cabinet(cabinet = conte_i, cabinet_int = conte_i_date, deputies = deputies)
+
+# conte_ii contributions and dates
+conte_ii_date &lt;- interval(ydm(&quot;2019-04-09&quot;), ydm(&quot;2021-12-02&quot;))
+
+prep_cabinet(cabinet = conte_ii, cabinet_int = conte_ii_date, deputies = deputies)</code></pre>
+            </div>
+            <div id="italia-viva" class="section level3">
+                <h2 class="mt-4 mb-2 text-0xl font-bold">Italia Viva</h2>
+                <p>A significant shortcoming was introduced with Conte’s 2nd cabinet.
+                    Italia Viva party was founded (2019-09-18) fourteen days after the
+                    cabinet was sworn. For this reason, the function drop IV deputies as
+                    switchers. For this reason, we must add the deputies manually into the
+                    <code>cabinet_deputies</code> dataframe:
+                </p>
+                <pre class="r"><code>iv &lt;- deputies %&gt;%
+filter(party == &quot;ITALIA VIVA&quot;) %&gt;%
+filter(int_start(date) == ymd(&quot;2019-09-19&quot;) &amp;
+    int_end(date) &gt; int_end(conte_ii_date)) %&gt;%
+select(!(date))
+
+conte_ii_deputies$party &lt;- ifelse(conte_ii_deputies$name %in% iv$name,
+                            &quot;ITALIA VIVA&quot;,
+                            conte_ii_deputies$party)</code></pre>
+            </div>
+        </div>
+        <div id="social-network-analysis" class="section level2">
+            <h2 class="mt-4 mb-2 text-0xl font-bold">Social Network Analysis</h2>
+            <p>The Social Network Analysis was held relying on the
+                <code>igraph</code> package. In order to produce a network, we must
+                provide a set of edges and a set of nodes. Since the data were
+                pre-processed in the previous section, we just needed to select the two
+                variables that contain the signatory and the related joint signatories
+                from the contributions datasets.
+            </p>
+            <pre class="r"><code># Edges preparations
+conte_i_edges &lt;- conte_i %&gt;%
+select(!c(num, date)) %&gt;%
+relocate(joint_signatory)
+
+# Edges preparations
+conte_ii_edges &lt;- conte_ii %&gt;% 
+select(!c(num, date)) %&gt;% 
+relocate(joint_signatory)</code></pre>
+            <p>Since we have already prepared the nodes’ datasets, we needed to
+                compute the networks with the <code>graph_from_data_frame()</code>
+                function. We specify the directed relationship of the edges, which goes
+                from the joint signatory to the related first signatory.</p>
+            <pre class="r"><code># Computating igraph network from edges df:
+conte_i_network &lt;- graph_from_data_frame(conte_i_edges, 
+                                     directed = T, 
+                                     vertices = conte_i_deputies)
+
+
+conte_ii_network &lt;- graph_from_data_frame(conte_ii_edges, 
+                                      directed = T, 
+                                      vertices = conte_ii_deputies)</code></pre>
+            <p>The last step is to give meaningful colour coding based on the node
+                party affiliation. Unfortunately, the implemented method was wordy, and
+                no other solution then nested <code>if-else</code> statements were
+                found:</p>
+            <pre class="r"><code># Coding the colours for Conte I network 
+V(conte_i_network)$color &lt;- NA
+V(conte_i_network)$color &lt;- 
+ifelse(V(conte_i_network)$party == &quot;FORZA ITALIA - BERLUSCONI PRESIDENTE&quot;,&quot;lightblue&quot;,
+ifelse(V(conte_i_network)$party == &quot;LEGA - SALVINI PREMIER&quot;, &quot;forestgreen&quot;,
+ifelse(V(conte_i_network)$party == &quot;PARTITO DEMOCRATICO&quot;,&quot;red&quot;,
+ifelse(V(conte_i_network)$party == &quot;MOVIMENTO 5 STELLE&quot;, &quot;yellow&quot;,
+ifelse(V(conte_i_network)$party == &quot;FRATELLI D&#39;ITALIA&quot;,&quot;#003366&quot;,
+ifelse(V(conte_i_network)$party == &quot;LIBERI E UGUALI&quot;,&quot;orange&quot;,
+ifelse(V(conte_i_network)$party == &quot;MISTO&quot;,&quot;#DDDDDD&quot;,
+ifelse(V(conte_i_network)$party == &quot;SWITCHER/DECAYED&quot;, NA, &quot;pink&quot;))))))))
+
+# Coding the colours for Conte I network 
+V(conte_ii_network)$color &lt;- NA
+V(conte_ii_network)$color &lt;- 
+ifelse(V(conte_ii_network)$party == &quot;FRATELLI D&#39;ITALIA&quot;,&quot;#003366&quot;,
+ifelse(V(conte_ii_network)$party == &quot;MOVIMENTO 5 STELLE&quot;,&quot;yellow&quot;,
+ifelse(V(conte_ii_network)$party == &quot;LEGA - SALVINI PREMIER&quot;,&quot;forestgreen&quot;,
+ifelse(V(conte_ii_network)$party == &quot;FORZA ITALIA - BERLUSCONI PRESIDENTE&quot;,&quot;lightblue&quot;,
+ifelse(V(conte_ii_network)$party == &quot;PARTITO DEMOCRATICO&quot;,&quot;red&quot;,
+ifelse(V(conte_ii_network)$party == &quot;LIBERI E UGUALI&quot;,&quot;orange&quot;,
+ifelse(V(conte_ii_network)$party == &quot;MISTO&quot;,&quot;#DDDDDD&quot;,
+ifelse(V(conte_ii_network)$party == &quot;ITALIA VIVA&quot;,&quot;#C83282&quot;,
+ifelse(V(conte_ii_network)$party == &quot;SWITCHER/DECAYED&quot;,NA, &quot;pink&quot;))))))))) </code></pre>
+            <div id="visualization" class="section level3">
+                <h3>Visualization</h3>
+                <p>To visualize the resulting network, we plot it tuning the arguments
+                    to obtain the most precise result. We applied an algorithm that spread
+                    the nodes using a physical simulation to better position them. For this
+                    analysis, we emplyed the Fruchterman-Reingold <span class="citation">(1991)</span> algorithm.
+                </p>
+                <pre class="r"><code># Fruchterman-Reingold layout computation:
+l &lt;- layout_with_fr(conte_i_network, niter = 2000)
+
+# Plot network
+plot(
+  
+  ## Network main arguments
+  conte_i_network, 
+  frame = F,
+  layout = l,
+  
+  ## Vertexes aes:
+  vertex.size = 7, 
+  vertex.label = NA,
+  vertex.label.cex = .7,
+  vertex.color = adjustcolor(V(conte_i_network)$color, alpha.f = 0.9),
+  
+  ## Edges aes: 
+  edge.arrow.size = .05,
+  edge.width = .3,
+  edge.curved =0.3)</code></pre>
+            </div>
+        </div>
+
+        <div id="iobd-index" class="section level2">
+        <h2 class="mt-4 mb-2 text-0xl font-bold">IOBD index</h2>
+            <p>The last part of this section will illustrate how the
+                <em>Intra-Opposition party Bills Differentiation</em> (IOBD) index was
+                computed, following the definition provided by De Giorgi &amp; Dias
+                <span class="citation">(2018)</span>:
+            </p>
+            $$IOBD = CSP+IPS$$
+            <p>Where:</p>
+            <ul>
+                <li><span class="math inline">\(CSP\)</span>: the percentage of
+                    co-sponsors of bills initiated by party X that belong to the same
+                    party;</li>
+                <li><span class="math inline">\(ISP\)</span>: of all the bills
+                    co-sponsored by MPs of party X, the percentage of those initiated by
+                    party X.</li>
+            </ul>
+            <div id="csp" class="section level3">
+                <h2 class="mt-4 mb-2 text-0xl font-bold">CPS</h2>
+                <p>To calculate the Cosponsorship index, we defined a simple function.
+                    First, we double joint the deputies df into contributions df to extract
+                    the deputies party. Then, grouping by the party of the first signatory,
+                    we divided the numbers of joint signatories of the same party by the
+                    total of joint signatories that had contributed to the party’s
+                    bills:</p>
+                <pre class="r"><code>cosponsor &lt;- function(contributions, 
+                      deputies, signatory = &quot;signatory&quot;, 
+                      joint_signatory = &quot;joint_signatory&quot;,
+                      mp_name = &quot;name&quot; ) {
+   contributions %&gt;% 
+      
+      # double join to get the signatory and joint signatory party 
+      left_join(deputies,
+                by = c(signatory = mp_name )) %&gt;% 
+      left_join(deputies,
+                by = c(joint_signatory = mp_name),
+                suffix = c(&quot;_main&quot;,&quot;_joint&quot;)) %&gt;% 
+      
+      # group by the bill and the party of the signatory and computing the csp
+      group_by(party_main) %&gt;% 
+      summarise(n= n(),
+                n_joint = sum(party_joint == party_main)) %&gt;% 
+      mutate(csp = (n_joint/n)) %&gt;% 
+      summarise(party = party_main,
+                csp = csp)
+}</code></pre>
+            </div>
+            <div id="ips" class="section level3">
+                <h2 class="mt-4 mb-2 font-bold">IPS</h2>
+                <p>We used the same structure as the previous function to calculate the
+                    intraparty index. This time, we grouped by the party of the joint
+                    signatories. So, we calculated all bills co-sponsored by MPs of a party,
+                    the percentage of those initiated by the same party:</p>
+                <pre class="r"><code>intraparty &lt;- function(contributions, 
+                       deputies, signatory = &quot;signatory&quot;, 
+                       joint_signatory = &quot;joint_signatory&quot;,
+                       mp_name = &quot;name&quot; ) {
+   contributions %&gt;% 
+      left_join(deputies,
+                by = c(signatory = mp_name )) %&gt;% 
+      left_join(deputies,
+                by = c(joint_signatory = mp_name),
+                suffix = c(&quot;_main&quot;,&quot;_joint&quot;)) %&gt;% 
+      
+      # group by party of the joint signatory
+      group_by(party_joint) %&gt;% 
+      summarise(n= n(),
+                n_joint = sum(party_joint == party_main)) %&gt;% 
+      
+      # computing the ISP index  
+      mutate(ips = (n_joint/n)) %&gt;% 
+      summarise(party = party_joint,
+                ips = ips)
+}</code></pre>
+            </div>
+            <div id="iobd-index-1" class="section level3">
+                <h2 class="mt-4 mb-2 text-0xl font-bold">IOBD index</h2>
+                <p>At last, we defined the last function, which calculates the sum of
+                    the two indexes defined before, relying on the above-explained
+                    functions:</p>
+                <pre class="r"><code>iobd_index &lt;- function(contributions, deputies, 
+                 signatory = &quot;signatory&quot;, joint_signatory = &quot;joint_signatory&quot;,
+                 mp_name = &quot;name&quot; ) {
+   
+   # call cosponsors function
+   cosponsor(contributions, deputies, 
+             signatory, joint_signatory,
+             mp_name) %&gt;%
+      
+   #join the result with intraparty function by party name
+      left_join(., intraparty(contributions, deputies, 
+                              signatory, joint_signatory,
+                              mp_name),
+                by = c(&quot;party&quot; = &quot;party&quot;)) %&gt;% 
+      
+   # summarize the results by the party name and IOBD var,
+   # which is the sum of CSP and IPS
+      summarise(party,
+                IOBD = csp+ips)
+}</code></pre>
+            </div>
+        </div>
+        </div>
+        <div id="discussion" class="section level1">
+            <h2 class="mt-4 mb-2 text-2xl font-bold">Results</h2>
+            <div id="network-analysis" class="section level2">
+                <h2 class="mt-4 mb-2 text-0xl font-bold">Network analysis</h2>
+
+                <div id="conte-i" class="section level3">
+                    <h2 class="mt-4 mb-2 text-0xl font-bold">Conte I</h2>
+
+                    <p>The visual analysis of the produced SNA graph permits some
+                        considerations. As can be observed in <strong>Figure 1</strong>, during
+                        the first Conte’s cabinet the majority of the parties were sheltered to
+                        their positions. Even if the two government parties, Lega Nord and
+                        Movimento 5 Stelle, have interacted extensively between them, they still
+                        constitute two distinct communities. Only the Partito Democratico
+                        results partially blended with Liberi e Uguali community. It must be
+                        noted that this visualization did not employ any modularity computation,
+                        and the nodes (which represent deputies) has been coloured by the party
+                        affiliation.</p>
+                        <div class="figure" style="text-align: center">
+                        <figure>
+                        <img src="../src/conte_i.png" width="500"></img>
+                        <figcaption>
+                            <span style="font-weight: bold;">Figure 1: </span><span style="font-style: italic;">Conte I contributions network graph</span>
+                        </figcaption>
+                    </figure>
+                    </div>  
+
+
+                </div>
+
+                <div id="conte-ii" class="section level3">
+                    <h2 class="mt-4 mb-2 text-0xl font-bold">Conte II</h2>
+
+
+                    <p><strong>Figure 2</strong> represent the network formed of
+                        co-authorship formed under the second Conte cabinet. The ruling parties
+                        were Movimento 5 Stelle, Partito Democratico, Liberi e Uguali, and
+                        Italia Viva. Again, we can obverse the formation of significant clusters
+                        within the Chamber of the Deputies. M5S once again had a strong
+                        relationship with other ruling parties; however, it formed a
+                        self-standing community from them. Notably, other ruling parties (PD,
+                        LeU, IV) were firmly held together, to the point that they constituted a
+                        community by themselves. As for the first network graph, we did not
+                        employ any modularity computation; therefore, the colour and the size of
+                        the nodes are provided manually and do not correspond to statistics
+                        computation.</p>
+                </div>
+
+                <div class="figure" style="text-align: center">
+                    <figure>
+                        <img src="../src/conte_ii.png" height="400"></img>
+                        <figcaption>
+                            <span style="font-weight: bold;">Figure 2: </span><span style="font-style: italic;">Conte II contributions network graph</span>
+                        </figcaption>
+                    </figure>
+
+                </div>
+            </div>
+            <div id="iobd-index-2" class="section level2">
+                <h2 class="mt-4 mb-2 text-0xl font-bold">IOBD index</h2>
+                <p>For the last part of the project, we calculated the IODB index for
+                    the two periods under analysis using the defined functions. The results,
+                    shown in <strong>Table 1</strong>, provide evidence in favour of our
+                    previous findings.<br />
+                    Under Conte I, all the parties demonstrated strong ties within them.
+                    Under Conte II, the parties had strong ties within them; however, the
+                    ties between the ruling parties were stronger than Conte I cabinet.</p>
+                <table class=" lightable-classic-2 lightable-hover table"
+                    style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;">
+                    <caption>
+                        IOBD index
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">
+                                party
+                            </th>
+                            <th style="text-align:right;">
+                                conte I
+                            </th>
+                            <th style="text-align:right;">
+                                conte II
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left;">
+                                FORZA ITALIA - BERLUSCONI PRESIDENTE
+                            </td>
+                            <td style="text-align:right;">
+                                1.830
+                            </td>
+                            <td style="text-align:right;">
+                                1.709
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                FRATELLI D’ITALIA
+                            </td>
+                            <td style="text-align:right;">
+                                1.898
+                            </td>
+                            <td style="text-align:right;">
+                                1.781
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                LEGA - SALVINI PREMIER
+                            </td>
+                            <td style="text-align:right;">
+                                1.971
+                            </td>
+                            <td style="text-align:right;">
+                                1.947
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                LIBERI E UGUALI
+                            </td>
+                            <td style="text-align:right;">
+                                1.429
+                            </td>
+                            <td style="text-align:right;">
+                                0.700
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                MISTO
+                            </td>
+                            <td style="text-align:right;">
+                                1.067
+                            </td>
+                            <td style="text-align:right;">
+                                0.351
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                MOVIMENTO 5 STELLE
+                            </td>
+                            <td style="text-align:right;">
+                                1.885
+                            </td>
+                            <td style="text-align:right;">
+                                1.711
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                PARTITO DEMOCRATICO
+                            </td>
+                            <td style="text-align:right;">
+                                1.873
+                            </td>
+                            <td style="text-align:right;">
+                                1.759
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                SWITCHER/DECAYED
+                            </td>
+                            <td style="text-align:right;">
+                                0.099
+                            </td>
+                            <td style="text-align:right;">
+                                0.289
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                ITALIA VIVA
+                            </td>
+                            <td style="text-align:right;">
+                                NA
+                            </td>
+                            <td style="text-align:right;">
+                                1.508
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="conclusion" class="section level1">
+            <h2 class="mt-4 mb-2 text-2xl font-bold">Conclusion</h2>
+            <p>In conclusion, in this short paper, we failed to provide enough
+                evidence favouring our hypothesis. Nevertheless, we can assert that the
+                parties were polarized and cohesive in the bill proposal and that no
+                prominent political factions were noticeable.</p>
+            <p>More in-depth analyses are required to provide a more explicit
+                demonstration. Further studies must break up the bill proposal into the
+                different topics exposed to understand if the variation of the topic
+                provokes a variation in the IODB index.</p>
+            <p>Moreover, a more reliable and flexible database type is needed. We
+                allow ourselves to suggest the usage of a network database powered by a
+                management system such as <a href="https://neo4j.com">Neo4j</a>.</p>
+        </div>
+        <div id="references" class="section level1 unnumbered">
+            <h2 class="mt-4 mb-2 text-2xl font-bold">References</h2>
+            <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+                <div id="ref-de_giorgi_2018" class="csl-entry">
+                    De Giorgi, E., &amp; Dias, A. (2018). Standing apart together?
+                    <span>Common</span> traits of (new) challenger parties in the
+                    <span>Italian</span> parliament. <em>Italian Political Science</em>,
+                    <em>13</em>(2).
+                </div>
+                <div id="ref-fruchterman_graph_1991" class="csl-entry">
+                    Fruchterman, T. M. J., &amp; Reingold, E. M. (1991). Graph
+                    <span>Drawing</span> by <span>Force</span>-directed
+                    <span>Placement</span>. <em>Software-Practice and Experience</em>,
+                    <em>21</em>(1).
+                </div>
+            </div>
+        </div>
+        <div class="footnotes footnotes-end-of-document">
+            <hr />
+            <ol>
+                <li id="fn1">
+                    <p><code>here</code> package provides a relative path to
+                        the top-level directory of the project, simplifying the referencing of
+                        the data regardless of the OS or the absolute path of the directories<a href="#fnref1"
+                            class="footnote-back">↩︎</a></p>
+                </li>
+                <li id="fn2">
+                    <p>defined as <code>Negate(</code>%in%<code>)</code><a href="#fnref2" class="footnote-back">↩︎</a>
+                    </p>
+                </li>
+                <li id="fn3">
+                    <p><code>filter(!(name %!in% c(cabinet$signatory,cabinet$joint_signatory))</code><a href="#fnref3"
+                            class="footnote-back">↩︎</a></p>
+                </li>
+            </ol>
+        </div>
+    </main>
+
+    <footer class="mt-8 mb-8">
+        <div class="container mx-auto">
+            <div class="mt-8 flex justify-between items-center">
+                <p class="mt-0 text-sm">© 2023 Nicola Casarin</p>
+                <p class="flex items-center mt-0"><a class="icon ml-1 mr-1" href="https://github.com/nico-casarin"
+                        title="github"><svg fill="#63636f" width="18" role="img" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>GitHub</title>
+                            <path
+                                d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
+                            </path>
+                        </svg></a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

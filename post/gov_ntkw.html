@@ -23,7 +23,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <script>const default_theme_config = "sand", default_light_theme = default_theme_config === "system" ? "light" : default_theme_config; let default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : default_light_theme; try { const e = localStorage.getItem("theme"); e && (default_theme = e === default_light_theme ? e : default_light_theme), localStorage.setItem("theme", default_theme), window.minima_theme = default_theme, document.querySelector("html").classList.add(default_theme) } catch (e) { console.error(e) }</script>
+    <!-- <script>const default_theme_config = "sand", default_light_theme = default_theme_config === "system" ? "light" : default_theme_config; let default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : default_light_theme; try { const e = localStorage.getItem("theme"); e && (default_theme = e === default_light_theme ? e : default_light_theme), localStorage.setItem("theme", default_theme), window.minima_theme = default_theme, document.querySelector("html").classList.add(default_theme) } catch (e) { console.error(e) }</script> -->
 </head>
 
 <body>
@@ -31,12 +31,8 @@
         <div class="container mx-auto">
             <nav class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <div id="theme-switch" class="text-3xl cursor-pointer">🌝</div>
-                </div>
-                <div>
-                    <div class="text-3xl">
-                        <h2 class="font-bold"><a href="../index.html">Index</a></h2>
-                    </div>
+                    <h2 class="font-bold text-3xl"><a href="../index.html" style="color: var(--text)">Index</a></h2>
+                    <!-- <div id="theme-switch" class="text-3xl cursor-pointer">🌝</div> -->
                 </div>
         </div>
         <div>

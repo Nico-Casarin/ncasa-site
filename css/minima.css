@@ -381,12 +381,13 @@ menu {
 }
 
 a {
-    color: inherit;
-    text-decoration: inherit
+    color: #3170a7;
+    text-decoration: underline
 }
 
 a:hover {
-    color: var(--prime, inherit)
+    color: #566e83;
+    text-decoration: none
 }
 
 kbd,
@@ -1227,7 +1228,7 @@ main p a {
 }
 
 main p a:hover {
-    text-decoration: underline
+    text-decoration: none
 }
 
 @keyframes showup {

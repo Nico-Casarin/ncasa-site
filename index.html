@@ -1,109 +1,101 @@
-<!DOCTYPE html>
-<html lang="en" class="sand">
+<!doctype html>
+<html lang="en">
 
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="generator" content="Hugo 0.111.3">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta property="og:title" content="Nicola's site">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.ncasa.it/">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Nicola's site">
-    <meta name="twitter:description" content="">
-    <!-- <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33"> -->
-    <title>Nicola's site</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/minima.css">
-    <script defer="defer" type="text/javascript" src="css/minima.js"></script>
-    <script src="node_modules/d3/dist/d3.min.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="favicon.ico">
 
-    <!-- <script>const default_theme_config = "sand", default_light_theme = default_theme_config === "system" ? "light" : default_theme_config; let default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : default_light_theme; try { const e = localStorage.getItem("theme"); e && (default_theme = e === default_light_theme ? e : default_light_theme), localStorage.setItem("theme", default_theme), window.minima_theme = default_theme, document.querySelector("html").classList.add(default_theme) } catch (e) { console.error(e) }</script> -->
+  <title>Nicola's Site</title>
 
-    
+  <!-- Bootstrap core CSS -->
+  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/jumbotron-narrow.css" rel="stylesheet">
+
+  <!-- Additional CSS-->
+  <link href="additional.css" rel="stylesheet">
+
 </head>
 
 <body>
-    <header class="mt-3 mb-6">
-        <div class="container mx-auto">
-            <nav class="flex justify-between items-center">
-                <!-- <div class="flex items-center">
-                    <div id="theme-switch" class="text-3xl cursor-pointer">🌝</div>
-                </div> -->
-                <ul class="flex items-center text-base font-bold    whitespace-nowrap overflow-x-auto overflow-y-hidden"></ul>
-                <ul class="flex item-center text-sm font-bold"></ul>
-            </nav>
-        </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+
+    <symbol id="github" viewBox="0 0 16 16">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>    </symbol>
+    <symbol id="linkedin" viewBow="0 0 16 16" class="bi bi-linkedin">
+      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/>
+    </symbol>
+  </svg>
+
+
+  <div class="container my-5">
+    <header class="d-flex flex-wrap justify-content-center border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-2 me-md-auto link-body-emphasis text-decoration-none">
+        <span class="fs-4">Home Sweet Home</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="/pages/about.html" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="./cv.html" class="nav-link">CV</a></li>
+
+      </ul>
     </header>
-    <main class="container mx-auto">
-        <h2 class="mt-8 text-3xl font-bold">Hello there</h2>
-        <!-- <p class="mt-0 mb-0">Work in progress 🚧</p> -->
-        <p class="mt-3 mb-3 home-intro"></p>
-        <div>
-            <h3 class="mt-8 text-3xl font-bold">Who am I</h3>
-            <div class="mt-3 mb-3 home-intro">
-                <p>I'm
-                    Nicola, a young enthusiast with a hunger for knowledge and a constant
-                    desire to push my limits. Born and raised in Italy, I've delved into the
-                    pages of contemporary history, nurturing an insatiable curiosity along
-                    the way.</p><br>
-                <p>My academic journey led me to a high school diploma
-                    in environmental chemistry and a university degree in contemporary
-                    history. But I didn't stop there! I pursued a master's program in data
-                    analytics, where I discovered the incredible power of statistics in
-                    various fields. Although I eventually left the program due to it not
-                    meeting my expectations in terms of analytics.</p><br>
-                <p>Fueling my
-                    passion for technology, I strive to bridge the gap between my other
-                    interests and this fascinating world. I am confident that the future
-                    holds exciting surprises.
-                    If you'd like to learn more about me and my journey, explore my personal
-                    website, or my <span><a href="https://ncasa.it/cv.html">CV!</a></span></p>
-            </div>
-        </div>
+  </div>
+  <!-- <div class="container my-5">
+    <hr>
+  </div> -->
 
-        <h3 class="mt-8 text-3xl font-bold">Random stuff</h3>
+  <div class="container my-5">
+    <!-- <p class="lead"> -->
+    <p>
+      I'm Nicola, a young enthusiast with a hunger for knowledge and a constant
+      desire to push my limits. Born and raised in Italy, I've delved into the
+      pages of contemporary history, nurturing an insatiable curiosity along
+      the way.</p>
+    <p>My academic journey led me to a high school diploma
+      in environmental chemistry and a university degree in contemporary
+      history. But I didn't stop there! I pursued a master's program in data
+      analytics, where I discovered the incredible power of statistics in
+      various fields. Although I eventually left the program due to it not
+      meeting my expectations in terms of analytics.</p>
+    <p>Fueling my
+      passion for technology, I strive to bridge the gap between my other
+      interests and this fascinating world. I am confident that the future
+      holds exciting surprises.
+      If you'd like to learn more about me and my journey, explore my personal
+      website, or my <span><a href="https://ncasa.it/cv.html">CV!</a></span></p>
+  </div>
 
-        <p class="mt-3 mb-3 text-2xl">Shiny app</p>
-        
-        <p class="mt-3 mb-3 home-intro">A <a href="https://n-oise.shinyapps.io/learninghours/">Learning Hours dashboard</a> I created to make my work easier during my first job. Developed in R Shiny. It is hosted on a server with limited active hours, so it may not be available all the time. If it is not working and you are curious, <a href="/post/shiny_screenshots.html">here some screenshots.</a></p>
-        
-        <p class="mt-3 mb-3 text-2xl">Some other random stuff:</p>
-
-        <div>
-                <img src="src/ntwk_graph.svg" width="1000px" style="max-width: 100vw;" alt="Network graph of Italian gov. Conte I"></img>
-                <p class="font-extralight mb-5">Laws network during italian gov. Conte I - <a href="/post/gov_ntkw.html">read more.</a><p>
-        </div>
-        <!-- <iframe width="100%" height="600" frameborder="0"
-            src="https://observablehq.com/embed/9b49339105a21ebe?cells=chart"></iframe> -->
-        <div>
-                    <img src="src/europ_2019.png" width="1000px" style="max-width: 100vw;" alt="Italian European Election 2019"></img>
-                    <p class="font-extralight mb-5">Italian 2019 European Election</p>
-        </div>
-
-        <div>
-            <img src="src/trump_tweet_sources.png" width="975px" style="max-width: 100vw;" alt="Trump tweets stats"></img>
-            <p class="font-extralight mb-5">Trump's tweets source analysis</p>
-    </div>
-    </main>
-    <footer class="mt-8 mb-8">
-        <div class="container mx-auto">
-            <div class="mt-8 flex justify-between items-center">
-                <p class="mt-0 text-sm">© 2023 Nicola Casarin</p>
-                <p class="flex items-center mt-0"><a class="icon ml-1 mr-1" href="https://github.com/nico-casarin"
-                        title="github"><svg fill="#63636f" width="18" role="img" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <title>GitHub</title>
-                            <path
-                                d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
-                            </path>
-                        </svg></a></p>
-            </div>
-        </div>
+  <div class="container my-5">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <div class="col-md-4 d-flex align-items-center">
+        <span class="mb-3 mb-md-0 text-muted">© 2024 Nicola Casarin</span>
+      </div>
+  
+      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><a class="text-muted" href="https://github.com/Nico-Casarin"><svg class="bi" width="24" height="24">
+              <use xlink:href="#github"></use>
+  
+            </svg></a></li>
+        <li class="ms-3"><a class="text-muted" href="https://www.linkedin.com/in/casarin-nicola/"><svg class="bi" width="24" height="15">
+              <use xlink:href="#linkedin"></use>
+  
+            </svg></a></li>
+      </ul>
     </footer>
+  </div>
+
+  </div> <!-- /container -->
+
+
 </body>
 
 </html>

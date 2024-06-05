@@ -85,3 +85,22 @@
 .w-60 {
   width: 60% !important;
 }
+
+.btn-copy {
+  --bs-btn-close-color: #000;
+  --bs-btn-close-opacity: 0.5;
+  --bs-btn-close-hover-opacity: 0.75;
+  --bs-btn-close-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --bs-btn-close-focus-opacity: 1;
+  --bs-btn-close-disabled-opacity: 0.25;
+  --bs-btn-close-white-filter: invert(1) grayscale(100%) brightness(200%);
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: 0.25em 0.25em;
+  color: var(--bs-btn-close-color);
+  background: transparent var(--bs-btn-close-bg) center/1em auto no-repeat;
+  border: 0;
+  border-radius: 0.375rem;
+  opacity: var(--bs-btn-close-opacity);
+}

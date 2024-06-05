@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../favicon.ico">
+
+  <title>Nicola's Site</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Custom styles for this template -->
+  <!-- <link href="css/jumbotron-narrow.css" rel="stylesheet"> -->
+
+  <!-- Additional CSS-->
+  <link href="../css/additional.css" rel="stylesheet">
+
+  <!-- JS bootstrap-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <script>
+    function copyClipboard() {
+// Get the text field
+var copyText = document.getElementById("pub_pgp").textContent; 
+// Select the text field
+// copyText.select();
+// copyText.setSelectionRange(0, 99999); 
+// For mobile devices
+
+// Copy the text inside the text field
+navigator.clipboard.writeText(copyText);
+
+// Alert the copied text
+// alert("Copied the text: " + copyText);
+} 
+  </script>
+
+</head>
+
+<body>
+
+  <script>
+    fetch('../icons.html')
+      .then(response => response.text())
+      .then(data => {
+        const svgContainer = document.createElement('div');
+        svgContainer.innerHTML = data;
+        document.body.appendChild(svgContainer);
+      });
+  </script>
+
+
+  <div class="container my-5">
+    <header class="d-flex flex-wrap justify-content-center border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-2 me-md-auto link-body-emphasis text-decoration-none">
+        <span class="fs-4">Home Sweet Home</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="../cv.html" class="nav-link ">CV</a></li>
+
+      </ul>
+    </header>
+  </div>
+  <!-- <div class="container my-5">
+    <hr>
+  </div> -->
+
+  <div class="container my-5">
+    <!-- <p class="lead"> -->
+    <h2>Wanna send me something really private? </h2>
+    <h2>Here is my public PGP key</h2>
+    <br/>
+
+      
+      <button type="button"
+      class="btn-copy"
+      onclick="copyClipboard()">
+      <svg class="bi"
+        width="44" height="25">
+        <use xlink:href="#copy"></use>
+      </svg></button>
+      
+    <div class="overflow-scroll">
+
+    <pre><code id="pub_pgp">
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+0Xq4yfzP2AS7FthmLb6nK4bO6Hs=
+=Z/oq
+-----END PGP PUBLIC KEY BLOCK-----
+</code></pre>
+</div>
+  </div>
+
+
+  <div class="container my-5">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <div class="col-md-4 d-flex align-items-center">
+        <span class="mb-3 mb-md-0 text-muted">© 2024 Nicola Casarin</span>
+      </div>
+
+      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+
+        <li class="ms-3"><a class="text-muted" href="pgp.html"><svg class="bi"
+          width="24" height="24">
+          <use xlink:href="#keyEmail"></use>
+
+        </svg></a></li>
+        <li class="ms-3"><a class="text-muted" href="https://github.com/Nico-Casarin"><svg class="bi" width="24"
+              height="24">
+              <use xlink:href="#github"></use>
+
+            </svg></a></li>
+        <li class="ms-3"><a class="text-muted" href="https://www.linkedin.com/in/casarin-nicola/"><svg class="bi"
+              width="24" height="15">
+              <use xlink:href="#linkedin"></use>
+
+            </svg></a></li>
+      </ul>
+    </footer>
+  </div>
+
+
+</body>
+
+</html>

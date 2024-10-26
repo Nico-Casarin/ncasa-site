@@ -1,2 +1,7 @@
 *.DS_Store
 /node_modules
+.Rproj.user
+*.Rproj
+*.R
+src/un_codes.json
+.Rhistory

@@ -20,6 +20,13 @@
   <!-- Additional CSS-->
   <link href="css/additional.css" rel="stylesheet">
 
+    <!-- Load Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+  
+    <script src="../src/table.js"></script>
+
   <!-- JS bootstrap-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
@@ -40,7 +47,7 @@
   <div class="container my-5">
     <header class="d-flex flex-wrap justify-content-center border-bottom">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-2 me-md-auto link-body-emphasis text-decoration-none">
-        <span class="fs-4">Home Sweet Home</span>
+        <span class="fs-4">N11N</span>
       </a>
 
       <ul class="nav nav-pills">
@@ -64,8 +71,110 @@
         Scrabble tiles from <cite title="Source Title">Prehistoric Earth </cite>
       </figcaption>
     </figure>
+    <hr>
   </div>
 
+
+    <div class="container my-5">
+      <p class="h4">What's that code?</p>
+      <p>When I see the orange rectangular placard on cargo containers, trailers, tankes, and similar vehicles, I know it indicates the transportation of hazardous materials.
+        While I understand it signlas a potential danger, I'm always curious abou the specific good being trasnported and how can to interpret the sign.
+      </p>
+      <p>
+        The placard, a 30 x 40 cm rectangle regulated by the 
+        <a href="https://unece.org/transport/standards/transport/dangerous-goods/adr-2023-agreement-concerning-international-carriage"> ADR treaty</a>, 
+        is divided in two sections. The upper section displays the Kemler number, which consists of two or sometimes three digits that identify the associated hazard. The first digit
+        indicates the primary hazard, followed by secondary and, if applicable, tertiary hazards. But how should be interpreted?
+      </p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Digit</th>
+            <th scope="col">As 1st Digit</th>
+            <th scope="col">As 2nd or 3rd Digit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">0</th>
+            <td></td>
+            <td>No Specification</td>
+          </tr>
+          <tr>
+            <th scope="row">1</th>
+            <td></td>
+            <td>Explosive</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Gas</td>
+            <td>Gas emission</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Flammable liquid</td>
+            <td>Flammable</td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Flammable solid</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">5</th>
+            <td>Comburent</td>
+            <td>Comburent properties</td>
+          </tr>
+          <tr>
+            <th scope="row">6</th>
+            <td>Toxic</td>
+            <td>Toxicity</td>
+          </tr>
+          <tr>
+            <th scope="row">7</th>
+            <td>Radioactive</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">8</th>
+            <td>Corrosive</td>
+            <td>Corrosivity</td>
+          </tr>
+          <tr>
+            <th scope="row">9</th>
+            <td>Danger of spontaneous violent reaction</td>
+            <td>Danger of violent reaction due to spontaneous decomposition of polymerization</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The bottom part of the placard displays the <i>UN Number</i>, a four-digit code ranging from 0000 to 3550 that identifies the specific material being trasnported.
+        Using this code offers several advantages, including enhanced safety (as it enables quick identification of the material), standardization, and reduced environmental and publich health risks.
+        The faster a hazard is identified, the sooner safety measures can be implemnted in an emergecy, and it also helps ensure that the goods are properly stored and trasnported.
+      </p>
+      <p>
+        The main disadvantages I see are that you can't infer the exact hazard directly from the UN Number, and memorizing over three thousand codes is unrealistic. So, below,
+        I've provided the full range of UN Numbers in an easily searchable format :)
+      </p>
+
+
+    <div class="container" style="margin-bottom: 6em">
+        <table id="table" data-height="500">
+        <thead>
+            <tr>
+                <th data-field="UN_Code">UN_Code</th>
+                <th data-field="Class">Class</th>
+                <th data-field="Description">Description</th>
+            </tr>
+        </thead>
+    </table>
+    </div>
+
+    <p>Source: Wikipedia <a href="https://en.wikipedia.org/wiki/Category:Lists_of_UN_numbers">Lists of UN number</a></p>
+    <hr>
+  </div>
+
+  
 
   <div id="carouselExample" class="carousel slide container my-5">
     <div class="carousel-inner">

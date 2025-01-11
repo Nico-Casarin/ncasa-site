@@ -1,8 +1,8 @@
 ---
+title: home
 layout: home
-title: /
 permalink: /
 ---
 
-# Initial index Page
-About Page
+> "What do you get if you multiply six by nine?"\
+> ~ Scrabble tiles from <cite title="Source Title">Prehistoric Earth </cite>

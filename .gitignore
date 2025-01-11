@@ -1,9 +1,5 @@
-*.DS_Store
-/node_modules
-.Rproj.user
-*.Rproj
-*.R
-src/un_codes.json
-.Rhistory
-pages/pgp.html
-pages/base.html
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor

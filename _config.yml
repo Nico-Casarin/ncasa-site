@@ -27,9 +27,16 @@ url: "htts://nicola.digital" # the base hostname & protocol for your site, e.g. 
 github_username:  Nico-Casarin
 
 # Build settings
-theme: minima
+theme: 'Nico-Casarin/jekyll-theme-console-remix'
+remote-theme: 'Nico-Casarin/jekyll-theme-console-remix'
 plugins:
   - jekyll-feed
+
+header_pages:
+  - index.md
+  - about.md
+
+style: light
 
 # Exclude from processing.
 # The following items will not be processed, by default.

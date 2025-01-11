@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "UN_Codes"
+date:   2024-10-27 18:52:36 +0100
+---
+When I see the orange rectangular placard on cargo containers, trailers, tanks, and similar vehicles, I know it indicates the transportation of hazardous materials. While I understand it signals a potential danger, I'm always curious about the specific good being transported and how to interpret the sign.
+
+The placard, a 30 x 40 cm rectangle regulated by the [ADR treaty](https://unece.org/transport/standards/transport/dangerous-goods/adr-2023-agreement-concerning-international-carriage), is divided into two sections. The upper section displays the Kemler number, which consists of two or sometimes three digits that identify the associated hazard. The first digit indicates the primary hazard, followed by secondary and, if applicable, tertiary hazards. But how should it be interpreted?
+
+| Digit | As 1st Digit                                    | As 2nd or 3rd Digit                                                 |
+|-------|-------------------------------------------------|----------------------------------------------------------------------|
+| 0     |                                                 | No Specification                                                    |
+| 1     |                                                 | Explosive                                                           |
+| 2     | Gas                                             | Gas emission                                                        |
+| 3     | Flammable liquid                                | Flammable                                                           |
+| 4     | Flammable solid                                 |                                                                      |
+| 5     | Comburent                                       | Comburent properties                                                |
+| 6     | Toxic                                           | Toxicity                                                            |
+| 7     | Radioactive                                     |                                                                      |
+| 8     | Corrosive                                       | Corrosivity                                                         |
+| 9     | Danger of spontaneous violent reaction          | Danger of violent reaction due to spontaneous decomposition or polymerization |
+
+The bottom part of the placard displays the *UN Number*, a four-digit code ranging from 0000 to 3550 that identifies the specific material being transported. Using this code offers several advantages, including enhanced safety (as it enables quick identification of the material), standardization, and reduced environmental and public health risks. The faster a hazard is identified, the sooner safety measures can be implemented in an emergency, and it also helps ensure that the goods are properly stored and transported.
+
+The main disadvantages I see are that you can't infer the exact hazard directly from the UN Number, and memorizing over three thousand codes is unrealistic. So, below, I've provided the full range of UN Numbers in an easily searchable format. :)
+
+  <table id="table" data-toggle="table" data-height="500" data-search="true" data-pagination="false">
+    <thead>
+      <tr>
+        <th data-field="UN_Code">UN Code</th>
+        <th data-field="Class">Class</th>
+        <th data-field="Description">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dynamic data will be loaded here -->
+    </tbody>
+  </table>
+
+<p>Source: Wikipedia <a href="https://en.wikipedia.org/wiki/Category:Lists_of_UN_numbers" target="_blank">Lists of UN number</a></p>

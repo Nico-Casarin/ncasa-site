@@ -2,6 +2,8 @@
 
 #google_analytics: UA-NNNNNNNN-N
 
+title: N11N
+
 header_pages:
   - index.md
   - about.md

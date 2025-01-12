@@ -2,6 +2,7 @@
 layout: post
 title:  "UN_Codes"
 date:   2024-10-27 18:52:36 +0100
+tag: til
 ---
 When I see the orange rectangular placard on cargo containers, trailers, tanks, and similar vehicles, I know it indicates the transportation of hazardous materials. While I understand it signals a potential danger, I'm always curious about the specific good being transported and how to interpret the sign.
 

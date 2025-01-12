@@ -29,7 +29,7 @@ The main disadvantages I see are that you can't infer the exact hazard directly 
     <thead>
       <tr>
         <th data-field="UN_Code">UN Code</th>
-        <th data-field="Class">Class</th>
+       <!-- <th data-field="Class">Class</th> --> 
         <th data-field="Description">Description</th>
       </tr>
     </thead>
